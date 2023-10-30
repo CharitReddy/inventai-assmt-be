@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "involveai-assess"
+version = "0.1.0"
+description = "FastAPI + Python Backend for assessment"
+authors = ["charitreddy <charitreddy@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+fastapi = "^0.104.0"
+openai = "^0.28.1"
+uvicorn = "^0.23.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
