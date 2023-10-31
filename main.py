@@ -31,42 +31,34 @@ OPENAI_API_KEY = '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'
 openai.api_key=OPENAI_API_KEY
 
 
+
+def generate_mail(model, user_info, content):
+    return model.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {
+                "role": "user",
+                "content": content.format(**user_info),
+            },
+        ],
+    )
+
+
 @app.post("/generate_emails")
 async def generate_emails(user_info:dict):
  
-  invitation_email= openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-          {
-              "role": "user",
-              "content": f"Generate an invitation email for {user_info['name']} to try out [frag ai], an app that can help them automate their social media handles. \n Use {user_info['info']} to personalize the email. Explain how automating social media handles saves them time in their profession from {user_info['info']}, and how they can focus on their tasks that require human interactions and leave tasks that can be automated to AI. \nInclude a subject field, and the to address {user_info['email']}"
-          },
-      ]
-    )
-
-
-
-  promotional_email=openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-          {
-              "role": "user",
-              "content": f"For future use, in case the user does not accept an invitation email that we sent, generate a promotional email for {user_info['name']} offering discounts for the user {user_info['name']}. \nInclude a subject field, and the to address {user_info['email']}"
-          },
-      ]
-    )
-
-
-
-  welcome_email=openai.ChatCompletion.create(
-        model="gpt-3.5-turbo",
-        messages=[
-          {
-              "role": "user",
-              "content": f"For future use, generate a welcome email for {user_info['name']} thanking them for trying out [frag ai]. \n Use {user_info['info']} and {user_info['name']} to personalize this email. \nInclude a subject field, and the to address {user_info['email']}"
-          },
-      ]
-    )
+  invitation_email = generate_mail(
+          openai.ChatCompletion, user_info,
+          "Generate an invitation email for {name} to try out [frag ai], an app that can help them automate their social media handles. Use {info} to personalize the email. Explain how automating social media handles saves them time in their profession from {info}, and how they can focus on their tasks that require human interactions and leave tasks that can be automated to AI. Include a subject field, and the to address {email}"
+      )
+  promotional_email = generate_mail(
+          openai.ChatCompletion, user_info,
+          f"For future use, in case the user does not accept an invitation email that we sent, generate a promotional email for {user_info['name']} offering discounts for the user {user_info['name']}. \nInclude a subject field, and the to address {user_info['email']}"
+      )
+  welcome_email = generate_mail(
+          openai.ChatCompletion, user_info,
+          f"For future use, generate a welcome email for {user_info['name']} thanking them for trying out [frag ai]. \n Use {user_info['info']} and {user_info['name']} to personalize this email. \nInclude a subject field, and the to address {user_info['email']}"
+      )
   
   email_list=[]
   for email in [invitation_email, promotional_email, welcome_email]:  
