@@ -6,6 +6,11 @@ from mangum import Mangum
 app = FastAPI()
 handler=Mangum(app=app)
 
+@app.get("/")
+def hello():
+    return{"message":"Hello lambda"}
+
+
 origins = ["*"]
 
 app.add_middleware(
