@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from api.api import router as api_router
-
+from mangum import Mangum
 
 app = FastAPI()
 
@@ -16,3 +16,5 @@ app.add_middleware(
 )
 
 app.include_router(api_router, prefix="/api")
+
+handler=Mangum(app=app)
