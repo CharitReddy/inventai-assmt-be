@@ -1,7 +1,5 @@
-from fastapi import FastAPI,HTTPException,Request,Path
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import openai
-from pydantic import BaseModel
 from api.api import router as api_router
 
 
