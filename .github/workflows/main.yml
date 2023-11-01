@@ -1,0 +1,34 @@
+name: inventai-be
+
+on:
+  push:
+    branches: -main
+
+jobs:
+  CI:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Python Setup
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.11
+
+      - name: Setup VENV
+        run: pip3 install virtualenv
+
+      - name: Activate VENV
+        run: python -m venv venv && source venv/bin/activate && pip3 install -r requirements.txt
+
+      - name: Zip Dependencies
+        run: /
+          cd ./venv/lib/python3.11/site-packages
+          zip -r9 ../../../../app.zip .
+      - name: Add App to Zip
+        run: cd ./app && zip -g ../app.zip -r .
+
+      - name: Upload Zip
+        uses: actions/upload-artifact@v2
+        with:
+          name: app
+          path: app.zip
