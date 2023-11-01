@@ -8,8 +8,18 @@ from dotenv import load_dotenv
 
 
 app = FastAPI()
-handler=Mangum(app=app)
 
+origins = ["*"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],  # You can specify specific HTTP methods, e.g., ["GET", "POST"]
+    allow_headers=["*"],  # You can specify specific headers if needed
+)
+
+handler=Mangum(app=app)
 
 load_dotenv()
 OPENAI_API_KEY = os.getenv("OPEN_AI_KEY")
