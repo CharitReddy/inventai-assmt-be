@@ -4,6 +4,7 @@ from api.api import router as api_router
 from mangum import Mangum
 
 app = FastAPI()
+handler=Mangum(app=app)
 
 origins = ["*"]
 
@@ -17,4 +18,3 @@ app.add_middleware(
 
 app.include_router(api_router, prefix="/api")
 
-handler=Mangum(app=app)
