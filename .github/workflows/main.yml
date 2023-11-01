@@ -2,7 +2,7 @@ name: inventai-be
 
 on:
   push:
-    branches: -main
+    branches: main
 
 jobs:
   CI:
