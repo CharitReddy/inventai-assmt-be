@@ -6,13 +6,13 @@ from dotenv import load_dotenv
 router = APIRouter()
 load_dotenv()
 
-# Your OpenAI API key
+# Load OpenAI API key from .env
 OPENAI_API_KEY = os.getenv("OPEN_AI_KEY")
 
 openai.api_key=OPENAI_API_KEY
 
 
-
+# Takes in model name, user details, prompt, and requests OpenAI to generate an email.
 def generate_mail(model, user_info, content):
     try:
       return model.create(
@@ -24,15 +24,18 @@ def generate_mail(model, user_info, content):
               },
           ],
       )
-    
+    # Raise generic error.
     except Exception as e:
       raise HTTPException(status_code=400, detail=f"OPEN AI Error - {e}")
        
 
-
+# Endpoint to interface with the method and trigger OpenAI calls using generate_mail method.
+# user_info should be a json consisting of:
+# name:str, email:str, info:str
 @router.post("/")
 async def generate_emails(user_info:dict):
   try:
+    # Make 3 OpenAI calls to generate three emails.
     invitation_email = generate_mail(
             openai.ChatCompletion, user_info,
             "Generate an invitation email for {name} to try out [frag ai], an app that can help them automate their social media handles. Use {info} to personalize the email. Explain how automating social media handles saves them time in their profession from {info}, and how they can focus on their tasks that require human interactions and leave tasks that can be automated to AI. Include a subject field, and the to address {email}"
@@ -46,11 +49,13 @@ async def generate_emails(user_info:dict):
             f"For future use, generate a welcome email for {user_info['name']} thanking them for trying out [frag ai]. \n Use {user_info['info']} and {user_info['name']} to personalize this email. \nInclude a subject field, and the to address {user_info['email']}"
         )
     
+    # Extract the generated emails from OpenAI Objects.
     email_list=[]
     for email in [invitation_email, promotional_email, welcome_email]:  
       email_list.append(email.choices[0].message.content)
     
     return email_list
+  # Raise generic error.
   except Exception as e:
     raise HTTPException(status_code=400, detail=f"Error generating emails - {e}")
         
