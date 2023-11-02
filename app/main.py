@@ -29,6 +29,7 @@ openai.api_key=OPENAI_API_KEY
 # Test connection
 @app.get("/")
 def hello():
+    print('hellooooooooo--------main')
     return{"message":"Hello lambda"}
 
 # Takes in model name, user details, prompt, and requests OpenAI to generate an email.
@@ -54,6 +55,7 @@ def generate_mail(model, user_info, content):
 @app.post('/generate-emails')
 async def generate_emails(user_info:dict):
   try:
+    print("----------------OpenAI API----------------main--------------")
     # Make 3 OpenAI calls to generate three emails.
     invitation_email = generate_mail(
             openai.ChatCompletion, user_info,
@@ -75,6 +77,7 @@ async def generate_emails(user_info:dict):
     return email_list
   # Raise generic error.
   except Exception as e:
+    print("-----------------OpenAI Error-----------------main"+e)
     raise HTTPException(status_code=400, detail=f"Error generating emails - {e}")
 
 
