@@ -29,8 +29,11 @@ openai.api_key=OPENAI_API_KEY
 # Test connection
 @app.get("/")
 def hello():
-    print('hellooooooooo--------main')
     return{"message":"Hello lambda"}
+
+# Originally placed this function in app/api/generateemails.py, 
+# prefixed it with its path in api.py, and prefixed all nested routes with /api here to keep it ideal to scale and add related endpoints closely.
+# Shifted the logic here after lambda deployment after being unable to resolve errors with nested routes. (Worked locally, but faced too many redirects on lambda).
 
 # Takes in model name, user details, prompt, and requests OpenAI to generate an email.
 def generate_mail(model, user_info, content):
@@ -55,9 +58,6 @@ def generate_mail(model, user_info, content):
 @app.post('/generate-emails')
 async def generate_emails(request:Request,user_info:dict):
   try:
-    print("----------------OpenAI API----------------main--------------")
-    print(f"----------request-------------\n{request}")
-    print(OPENAI_API_KEY+"KEY API KEY")
     # Make 3 OpenAI calls to generate three emails.
     invitation_email = generate_mail(
             openai.ChatCompletion, user_info,
@@ -79,7 +79,6 @@ async def generate_emails(request:Request,user_info:dict):
     return email_list
   # Raise generic error.
   except Exception as e:
-    print(f"-----------------OpenAI Error-----------------main\n{e}")
     raise HTTPException(status_code=400, detail=f"Error generating emails - {e}")
 
 
