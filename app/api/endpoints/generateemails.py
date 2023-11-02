@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException,Request
 import openai
 import os
 from dotenv import load_dotenv
@@ -33,9 +33,9 @@ def generate_mail(model, user_info, content):
 # user_info should be a json consisting of:
 # name:str, email:str, info:str
 @router.post("/")
-async def generate_emails(user_info:dict):
+async def generate_emails(user_info:dict,request:Request):
   try:
-    print("----------------OpenAI API----------------")
+    print(f"----------------OpenAI API----------------\n{request}")
     print(user_info)
     # Make 3 OpenAI calls to generate three emails.
     invitation_email = generate_mail(
@@ -59,7 +59,7 @@ async def generate_emails(user_info:dict):
     return email_list
   # Raise generic error.
   except Exception as e:
-    print("-----------------OpenAI Error-----------------"+e)
+    print(f"-----------------OpenAI Error-----------------\n{e}")
     raise HTTPException(status_code=400, detail=f"Error generating emails - {e}")
         
   

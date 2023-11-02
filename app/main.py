@@ -56,7 +56,7 @@ def generate_mail(model, user_info, content):
 async def generate_emails(request:Request,user_info:dict):
   try:
     print("----------------OpenAI API----------------main--------------")
-    print("----------request-------------"+request)
+    print(f"----------request-------------\n{request}")
     print(OPENAI_API_KEY+"KEY API KEY")
     # Make 3 OpenAI calls to generate three emails.
     invitation_email = generate_mail(
@@ -79,7 +79,7 @@ async def generate_emails(request:Request,user_info:dict):
     return email_list
   # Raise generic error.
   except Exception as e:
-    print("-----------------OpenAI Error-----------------main"+e)
+    print(f"-----------------OpenAI Error-----------------main\n{e}")
     raise HTTPException(status_code=400, detail=f"Error generating emails - {e}")
 
 
