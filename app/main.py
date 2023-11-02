@@ -1,4 +1,4 @@
-from fastapi import FastAPI,HTTPException
+from fastapi import FastAPI,HTTPException,Request
 from fastapi.middleware.cors import CORSMiddleware
 from api.api import router as api_router
 from mangum import Mangum
@@ -53,9 +53,11 @@ def generate_mail(model, user_info, content):
 # user_info should be a json consisting of:
 # name:str, email:str, info:str
 @app.post('/generate-emails')
-async def generate_emails(user_info:dict):
+async def generate_emails(request:Request,user_info:dict):
   try:
     print("----------------OpenAI API----------------main--------------")
+    print("----------request-------------"+request)
+    print(OPENAI_API_KEY+"KEY API KEY")
     # Make 3 OpenAI calls to generate three emails.
     invitation_email = generate_mail(
             openai.ChatCompletion, user_info,
