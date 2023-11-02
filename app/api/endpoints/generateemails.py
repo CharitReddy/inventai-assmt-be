@@ -35,6 +35,8 @@ def generate_mail(model, user_info, content):
 @router.post("/")
 async def generate_emails(user_info:dict):
   try:
+    print("----------------OpenAI API----------------")
+    print(user_info)
     # Make 3 OpenAI calls to generate three emails.
     invitation_email = generate_mail(
             openai.ChatCompletion, user_info,
@@ -57,6 +59,7 @@ async def generate_emails(user_info:dict):
     return email_list
   # Raise generic error.
   except Exception as e:
+    print("-----------------OpenAI Error-----------------"+e)
     raise HTTPException(status_code=400, detail=f"Error generating emails - {e}")
         
   
